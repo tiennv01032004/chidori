@@ -1,88 +1,82 @@
 <canvas id="chidori"></canvas>
 
 <script>
-    document.body.style.margin = 0
-    document.body.style.backgroundColor = 'black'
+  document.body.style.margin = 0;
+  document.body.style.backgroundColor = "black";
 
-    c = document.querySelector("#chidori")
-    ctx = c.getContext('2d');
-    c.width = window.innerWidth
-    c.height = window.innerHeight
+  c = document.querySelector("#chidori");
+  ctx = c.getContext("2d");
+  c.width = window.innerWidth;
+  c.height = window.innerHeight;
 
-    const centerX = c.width/2
-    const centerY = c.height/2
+  const centerX = c.width / 2;
+  const centerY = c.height / 2;
 
-    function random(min,max) {
-        return Math.random()*(max-min)+min
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function drawLightning(x, y, length, angle, depth) {
+    if (depth === 0) return;
+
+    const endX = x + Math.cos(angle) * length;
+    const endY = y + Math.sin(angle) * length;
+
+    ctx.strokeStyle = "rgba(100,200,255,0.9)";
+    ctx.lineWidth = depth * 1.2;
+    ctx.shadowColor = "aqua";
+    ctx.shadowBlur = 15;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(endX, endY);
+    ctx.stroke();
+
+    if (Math.random() > 0.5) {
+      drawLightning(
+        endX,
+        endY,
+        length * 0.7,
+        angle + random(-0.7, 0.7),
+        depth - 1
+      );
     }
-
-    function drawLightning(x,y,length,angle,depth){
-        if(depth===0) return;
-
-        const endX = x+Math.cos(angle)*length
-        const endY = y+Math.sin(angle)*length
-
-        ctx.strokeStyle='rgba(100,200,255,0.9)'
-        ctx.lineWidth=depth*1.2
-        ctx.shadowColor ='aqua'
-        ctx.shadowBlur = 15
-        ctx.beginPath()
-        ctx.moveTo(x,y)
-        ctx.lineTo(endX,endY)
-        ctx.stroke()
-
-        if(Math.random() > 0.5){
-            drawLightning(
-                endX,
-                endY,
-                length*0.7,
-                angle+random(-0.7,0.7),
-                depth-1
-            )
-        }
-        if(Math.random() > 0.5){
-            drawLightning(
-                endX,
-                endY,
-                length*0.7,
-                angle-random(-0.7,0.7),
-                depth-1
-            )
-        }
+    if (Math.random() > 0.5) {
+      drawLightning(
+        endX,
+        endY,
+        length * 0.7,
+        angle - random(-0.7, 0.7),
+        depth - 1
+      );
     }
+  }
 
-    const img = new Image()
-    img.src = './img/kakashi-removebg-preview.png'
-    img.onload = function(){
-        drawChidori()
-    }
+  const img = new Image();
+  img.src = "/chidori/img/kakashi-removebg-preview.png";
+  img.onload = function () {
+    drawChidori();
+  };
 
-    function drawChidori(){
-        ctx.clearRect(0,0,c.width,c.height)
+  function drawChidori() {
+    ctx.clearRect(0, 0, c.width, c.height);
 
-        const imgWidth = 500
-        const imgHeight = 500
-        ctx.drawImage(
-            img,
-            centerX-imgWidth/2,
-            centerY-imgHeight/2,
-            imgWidth,
-            imgHeight
-        )
+    const imgWidth = 500;
+    const imgHeight = 500;
+    ctx.drawImage(
+      img,
+      centerX - imgWidth / 2,
+      centerY - imgHeight / 2,
+      imgWidth,
+      imgHeight
+    );
 
-        ctx.beginPath()
-        ctx.fill()
+    ctx.beginPath();
+    ctx.fill();
 
-        Array.from({length:25},(_,index)=>{
-            const angle = random(0,Math.PI*2)
-            drawLightning(
-                centerX,
-                centerY+50,
-                random(80,150),
-                angle,
-                4
-            )
-        })
-        requestAnimationFrame(drawChidori)
-    }
+    Array.from({ length: 25 }, (_, index) => {
+      const angle = random(0, Math.PI * 2);
+      drawLightning(centerX, centerY + 50, random(80, 150), angle, 4);
+    });
+    requestAnimationFrame(drawChidori);
+  }
 </script>
